@@ -80,60 +80,64 @@ export default {
      //basically the trainChild function checks if you are registered as a trainer if true it returns true and pushes the child into the array of children you are training(add the child's progress to the child array)
      //else takes you to the register page and does the registration and pushes the child into the the children array for you as the first registered child to be trained
       let train = await this.Trainer();
-      console.log(train)
+        console.log(train)
      if(train){
-        const ChildrenRef = doc(db, "Trainer",this.id);
-        await updateDoc(ChildrenRef, {
-        Children:arrayUnion({id:uuidv4(),name:this.child.name,age:this.child.age,gender:this.child.gender,image:this.child.image,proposedcareer:this.child.proposedcareer,detail:this.child.detail,progress:[]})
-      });
-      }else{
-        let childId = this.$route.params.id;
-         localStorage.setItem("childId",childId)
-         this.$router.push({name: 'train',path:'/trainer'})
-      }
-    },
-    async Trainer(){
-       let signinToken = localStorage.getItem('signinToken');
-       if(signinToken){
-           let email = jwtDecode(signinToken).email;
-            //carry out the check on the Trainer collection to see if you can find the email
-           const querySnapshot = await getDocs(collection(db,"Trainer"))
-           querySnapshot.forEach((doc)=>{
-             if(doc.data().email === email){
-               return true;
-             }else{
-              return false;
-             }
-           })
+         const ChildrenRef = doc(db, "Trainer",this.id);
+         await updateDoc(ChildrenRef, {
+         Children:arrayUnion({id:uuidv4(),name:this.child.name,age:this.child.age,gender:this.child.gender,image:this.child.image,proposedcareer:this.child.proposedcareer,detail:this.child.detail,progress:[]})
+       });
+       //clear child id
+       localStorage.removeItem("childId")
        }else{
-        alert('You are not signed in');
-        
-        //the modal should carry the button to go to the login page
-        //check if the person has account if not ask the person to signup
+         let childId = this.$route.params.id;
+          localStorage.setItem("childId",childId)
+          this.$router.push({name: 'signup',path:'/signup'})
        }
+     },
+     async Trainer(){
+         //check the localstorage for the usedata string
+         console.log(`in the trainer function`)
+         let userdata = localStorage.getItem("Userdata")
+          if(userdata){
+            userdata = JSON.parse(userdata)
+             return userdata.Trainer
+          }else{
+            return false;
+          }
     },
     getEmail(){
         let signinToken = localStorage.getItem("signinToken");
         let email = jwtDecode(signinToken).email
         return email;
     },
-    async getRef(coll){
-        let email = this.getEmail()
-        const querySnapshot = await getDocs(collection(db,coll))
-        querySnapshot.forEach((doc)=>{
-           if(doc.data().email === email){
+    // async getRef(coll){
+    //     let email = this.getEmail()
+    //     const querySnapshot = await getDocs(collection(db,coll))
+    //     querySnapshot.forEach((doc)=>{
+    //        if(doc.data().email === email){
+    //         this.id = doc.id
+            
+    //        }
+    //     })
+    // },
+    async getRef(){
+      let email = this.getEmail()
+      console.log(email)
+       const querySnapshot = await getDocs(collection(db,"Trainer"))
+       querySnapshot.forEach((doc)=>{
+          if(doc.data().email === email){
             this.id = doc.id
-          
-           }
-        })
-    },
+          }
+       })
+      // console.log(this.id);
+    }
     
  },
  
  created(){
-  
+  this.Trainer();
     this.getChild();
-    this.getRef("Trainer")
+   this.getRef()
    
  }
 }

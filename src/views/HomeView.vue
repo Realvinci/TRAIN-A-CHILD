@@ -174,10 +174,76 @@ export default {
          this.children = doc.data().children
       })
       console.log(this.children)
-   }
+   },
+   async checkUserdatainLS(){
+       let Admin = false;
+      let userData = localStorage.getItem("Userdata")
+      if(userData){
+        userData = JSON.parse(userData)/// carry out the check here and return data
+        //console.log(typeof(userData.credential))
+         let signinToken = localStorage.getItem("signinToken")
+         let email = jwtDecode(signinToken).email
+         let coll = userData.credential
+         let userdata = []
+         const querySnapshot = await getDocs(collection(db,coll))
+         querySnapshot.forEach((doc)=>{
+            userdata.push(doc.data())
+         })
+         console.log(email)
+         for(let user of userdata){
+            if(user.email===email){
+              console.log(user.Children)//something should be done with this data
+              //localStorage.setItem("children",JSON.stringify(user.children))
+            }
+         }
+         //get prviledge here and clear the userdata
+        let role =  userData.role
+         console.log(role)
+         if(role === "User"){
+           console.log('The role of the user is user');
+         }else{
+          //call escalate user priviledges probably with a function 
+          //
+         }
+      }else{
+        //do nothing
+      } 
+   },
+   async PushUserDatatoLS(){
+  //return the credential and the role
+  //get the email and  ....carryout a check on the localstorage find out if the signintoken exist and get the signintoken from there and decode to get the email if it doesnt exist get the this.email
+  //on press login get the this.email and replace the email here 
+ 
+   let siginToken = localStorage.getItem("signinToken");
+   let email = jwtDecode(siginToken).email
+ 
+  let users = []; 
+  const querySnapshot = await getDocs(collection(db,"Users"))
+    querySnapshot.forEach((doc)=>{
+         users.push(doc.data().Users)
+    })
+    for(let user of users){
+        for(let u of user){
+          //"Trainer@gmail.com" 
+          if(email === u.email){
+            
+            let userdata = {
+               Trainer : u.Trainer,
+               role:u.role,
+               credential:u.credential
+             }
+             console.log(userdata)
+           localStorage.setItem("Userdata",JSON.stringify(userdata))
+          }
+        }
+    }
+   
+ },
  },
  created(){
+  this.PushUserDatatoLS();
   //this.getEmail();
+  this.checkUserdatainLS();
  this.Welome();
  this.getAllChildren();
  }
@@ -363,3 +429,7 @@ a:hover {
     transform: translateY(-50%);
 }
 </style>
+
+
+
+///in the created check the userdata and get the userdata the collection is the credential and 

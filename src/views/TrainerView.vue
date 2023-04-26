@@ -86,11 +86,13 @@ export default {
       
       console.log('Entering trainer info')
        const docRef = await addDoc(collection(db,"Trainer"),{
-         name:name,
-         email:email,
-         children:children,
-         phone:phone,
-         country:country
+        id:uuidv4(),
+           name:this.name,
+           email:this.email,
+           childen:[],
+           Trainer:true,
+           role:"user",
+           credential:"Trainer"
        })
         this.TrainerId = docRef.id
        console.log("Document written with ID: ",this.TrainerId);
@@ -100,7 +102,7 @@ export default {
       //   Trainers: arrayUnion({id:this.uniqueid,name:this.name,email:this.email,phone:this.phone,country:this.country,children:[]})
       //  })
        await updateDoc(AdminDocRef, {
-        Trainers: arrayUnion({id:this.uniqueid,name:this.name,email:this.email,phone:this.phone,country:this.country,children:[]})
+        Trainers: arrayUnion({id:uuidv4(),name:this.name,email:this.email,children:[],Trainer:true,role:"user",credential:"Trainer"})
       });///call a function to add the child if it exists to the new array
       const TrainerRef = doc(db,"Trainer",this.TrainerId)
       await updateDoc(TrainerRef,{

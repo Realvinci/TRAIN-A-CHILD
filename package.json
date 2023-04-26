@@ -7,8 +7,20 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "core-js": "^3.8.3",
-    "vue": "^2.6.14",
+    "assert": "^2.0.0",
+    "axios": "^1.3.5",
+    "bootstrap-vue": "^2.23.1",
+    "file-saver": "^2.0.5",
+    "firebase": "^9.16.0",
+    "fs-extra": "^11.1.0",
+    "jwt-decode": "^3.1.2",
+    "magicli": "^0.2.1",
+    "mime-types": "^2.1.35",
+    "request": "^2.88.2",
+    "require": "^0.4.4",
+    "util": "^0.12.5",
+    "uuid": "^9.0.0",
+    "vue": "^2.7.14",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
   },
@@ -17,6 +29,7 @@
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "image-data-uri": "^1.0.0",
     "vue-template-compiler": "^2.6.14"
   }
 }

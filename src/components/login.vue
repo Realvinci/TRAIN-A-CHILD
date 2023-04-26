@@ -116,17 +116,19 @@ export default {
           for(let u of user){
             //"Trainer@gmail.com" 
             if(email=== u.email){
-              // console.log(u);
+              
               let userdata = {
-                 credential : u.credential,
+                 Trainer : u.Trainer,
                  role:u.role,
+                 credential:u.credential
                }
-              localStorage.setItem("Userdata",JSON.stringify(userdata))
+               console.log(userdata)
+             localStorage.setItem("Userdata",JSON.stringify(userdata))
             }
           }
       }
      
-   }
+   },
   },
   created(){
  
