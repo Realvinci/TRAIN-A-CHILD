@@ -51,7 +51,8 @@ export default {
         image:'',
         proposedcareer:'',
         detail:'',
-        id:''
+        id:'',
+        uniqueid:''
       }
     }
  },
@@ -80,14 +81,16 @@ export default {
      //basically the trainChild function checks if you are registered as a trainer if true it returns true and pushes the child into the array of children you are training(add the child's progress to the child array)
      //else takes you to the register page and does the registration and pushes the child into the the children array for you as the first registered child to be trained
       let train = await this.Trainer();
-        console.log(train)
+       // console.log(train)
      if(train){
          const ChildrenRef = doc(db, "Trainer",this.id);
+         console.log(this.id)
          await updateDoc(ChildrenRef, {
          Children:arrayUnion({id:uuidv4(),name:this.child.name,age:this.child.age,gender:this.child.gender,image:this.child.image,proposedcareer:this.child.proposedcareer,detail:this.child.detail,progress:[]})
        });
        //clear child id
        localStorage.removeItem("childId")
+       this.$router.push(`/trainerdashboard/${this.uniqueid}`)
        }else{
          let childId = this.$route.params.id;
           localStorage.setItem("childId",childId)
@@ -120,25 +123,24 @@ export default {
     //        }
     //     })
     // },
+
     async getRef(){
       let email = this.getEmail()
-      console.log(email)
-       const querySnapshot = await getDocs(collection(db,"Trainer"))
-       querySnapshot.forEach((doc)=>{
+      const querySnapshot = await getDocs(collection(db,"Trainer"))
+      querySnapshot.forEach((doc)=>{
           if(doc.data().email === email){
-            this.id = doc.id
+             this.id = doc.id
+             this.uniqueid = doc.data().id
           }
-       })
-      // console.log(this.id);
+      })
     }
-    
  },
  
  created(){
   this.Trainer();
     this.getChild();
    this.getRef()
-   
+  
  }
 }
 </script>
