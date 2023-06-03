@@ -139,6 +139,28 @@ export default {
 <style>
 
 </style>
+
+///check  for the localstorage if the user is recruite check for admin or not if is admin
+push the function
+
+
+
+
+
+
+
+///admin is the first recruiter
+
+
+
+
+
+
+
+
+
+
+
 ///on login make userdata and push to localstorage 
 to be used at the home to get the user credential which is going to be used for the collection value as well as to get the data // on goin home get the userdata and clear the userdata
 login(){

@@ -156,7 +156,6 @@ export default {
         })
        }
        )
-      
     },
     getUser(){
       const userToken = localStorage.getItem('signInToken')

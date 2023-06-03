@@ -1,54 +1,77 @@
 <template>
   <div>
-    <h1>Trainer Dashboard</h1>
-    {{ Trainerdetail.name }}
+     <div v-if="!profilepicture">
+      <img src="../assets/trainerdefault.jpg" alt="" width="200px;">
+     </div> 
+     <div >
+        <img :src="profilepictureUrl" alt="" width="200px">
+     </div>
+  
+          <h3 style="padding-top:10px;">Welcome</h3>
+           {{ Trainerdetail.name }}
+           <h2>Thank you!</h2>
+           <form @submit.prevent="uploadDisplayPic">
+                <div class="form-group">
+                <label for="exampleFormControlFile1">Image:</label>
+                <input type="file" class="form-control-file" @change="getdisplaypic" name="file" id="file">
+                <button class="btn btn-primary" @click="uploadDisplayPic">Upload</button>
+            </div>
+          </form>
+           <div class="children">
+                  <div v-for="(child,i) in Trainerdetail.children" :key="i">
+                          <router-link :to="`/TraineeChildDetail/${child.id}`">
+                            <img :src="child.image" alt="" width="100px">
+                          </router-link>
+                  </div>
+           </div>
+           <router-link to="/">
+            <button class="btn btn-primary">Home</button>
+           </router-link>
+         
   </div>
 </template>
 
 <script>
 import {app as app} from '../../firebase'
-import { getFirestore,getDocs,doc,collection, updateDoc,arrayUnion } from 'firebase/firestore'
+import { getFirestore,getDocs,doc,collection, updateDoc,arrayUnion, setDoc } from 'firebase/firestore'
 import jwtDecode from 'jwt-decode'
+import {getDownloadURL,uploadBytesResumable,ref,getStorage } from 'firebase/storage'
 const db = getFirestore(app)
+const storage = getStorage(app)
 export default {
   name:'TrainerDashboard',
   data(){
     return{
       uniqueid:'',
-      Trainerdetail:{
-        children:[],
-        country:'',
-        email:'',
-        id:'',
-        name:'',
-        phone:''
-      }
+      email:'',
+      Trainerdetail:{},
+      dp:'',
+      display:null,
+      id:'',
+      profilepicture:false,
+      profilepictureUrl:''
     }
   },
   methods:{
+    getdisplaypic(){
+      this.display = event.target.files[0];
+    },
      async getTrainersChildren(){
       let Trainers = [];
-       const querySnapshot = await getDocs(collection(db,"Admin"))
+       const querySnapshot = await getDocs(collection(db,"Trainer"))
        querySnapshot.forEach((doc)=>{
-         //console.log(doc.data().Trainers)
-         for(let item of doc.data().Trainers){
-            Trainers.push(item);
-         }
+           if(doc.data().email === this.email){
+             //  console.log(doc.data())
+               this.Trainerdetail ={
+                  name:doc.data().name,
+                  id:doc.data().id,
+                  email:doc.data().email,
+                  children:doc.data().Children
+               }
+           }
        })
-       for(let item of Trainers){
-        if(item.id === this.uniqueid){
-          console.log(item);
-          this.Trainerdetail = {
-            children:item.children,
-            country:item.country,
-            email:item.email,
-            id:item.id,
-            name:item.name,
-            phone:item.phone
-          }
-        }
-       }
-       console.log(this.Trainerdetail)
+      
+      
      },
      getparamid(){
        this.uniqueid = this.$route.params.id
@@ -67,10 +90,9 @@ export default {
     querySnapshot.forEach((doc)=>{
          users.push(doc.data().Users)
     })
-    console.log('this is from the users field',users)
+   
     for(let user of users){
         for(let u of user){
-          //"Trainer@gmail.com" 
           if(email === u.email){
             
             let userdata = {
@@ -109,12 +131,132 @@ async checklsforchilddata(){
        localStorage.removeItem("childId");
    }
    localStorage.removeItem("childdata")
+ },
+ uploadDisplayPic(){
+     const metadata = {
+         contentType:'image/jpeg'
+     };
+     //Upload file and metadata to the object 'image/nameofimage.jpeg
+     const storageRef = ref(storage,'credential/'+ this.display.name)
+     const uploadTask = uploadBytesResumable(storageRef,this.display,metadata);
+     //Listen for state changes, errors, and completion of the upload
+     uploadTask.on('state_changed',
+     (snapshot)=>{
+       const progress = (snapshot.bytesTransferred/ snapshot.totalBytes) * 100;
+       console.log(`Upload is ${progress}% done`)
+       switch(snapshot.state){
+          case 'paused':
+            console.lg('Upload is paused');
+            break;
+          case 'running':
+            console.log("Upload is running");
+            break;    
+       }
+     },
+     (error)=>{
+      switch(error.code){
+         case 'storage/unauthorized':
+          //User doesnt have permission to access the object
+          break;
+         case 'storage/canceled':
+          //User cancelled the upload 
+          break;
+          case 'storage/unknown':
+            //Unknown error occured, inspect error.serverResponse
+            break;
+      }
+     },
+     ()=>{
+       getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl)=>{
+         this.dp =downloadUrl
+         console.log(`File avalable at`,downloadUrl)
+         this.savedp(downloadUrl)
+         window.location.reload()
+       })
+     }
+     )
+ },
+ async savedp(imageurl){
+    let signInToken = localStorage.getItem("signinToken")
+     let email = jwtDecode(signInToken).email
+     let item ={}
+   //get access to the user from the trainers
+    let docid = localStorage.getItem("docid")
+     const TrainerRef = doc(db, "Trainer",docid);
+     const querySnapshot = await getDocs(collection(db,"Trainer"))
+     querySnapshot.forEach((doc)=>{
+          if(doc.data().email == email){
+              console.log('The properties',doc.data())
+               item = {
+                 name:doc.data().name,
+                 Children:doc.data().Children,
+                 email:doc.data().email,
+                 credential:doc.data().credential,
+                 id:doc.data().id,
+                 role:doc.data().role,
+                 Trainer:doc.data().Trainer,
+                 
+              }
+             
+          }
+         
+     })
+    
+     console.log('this are items of the object item',item)
+     await setDoc(TrainerRef,{
+               Children:item.Children,
+               email:item.email,
+               credential:item.credential,
+               id:item.id,
+               role:item.role,
+               Trainer:item.Trainer,
+               dp:imageurl
+     })
+ },
+  getEmail(){
+    let signinToken = localStorage.getItem("signinToken")
+    let email = jwtDecode(signinToken).email
+    this.email = email
+ },
+ async getDocid(){
+   let signinToken = localStorage.getItem("signinToken")
+   let email = jwtDecode(signinToken).email
+    const querySnapshot = await getDocs(collection(db,"Trainer"))
+       querySnapshot.forEach((doc)=>{
+           if(doc.data().email === email){
+              this.id = doc.id          
+              }
+       })
+     localStorage.setItem("docid",this.id)
+ },
+ async checkforprofilepicture(){
+   let signin = localStorage.getItem("signinToken")
+   let email = jwtDecode(signin).email
+   const querySnapshot = await getDocs(collection(db,"Trainer"))
+    querySnapshot.forEach((doc)=>{
+        if(doc.data().email === email){
+            //checkfor existence of propertie
+            if(doc.data().dp){
+               console.log('Picture exists');
+               this.profilepicture = true
+               this.profilepictureUrl = doc.data().dp
+               console.log(this.profilepicture)
+            }else{
+               console.log('Picture doesnt exists')
+            }
+        }
+    })
+    
  }
   },
   beforeMount(){
     this.PushUserDatatoLS();
+   
   },
   created(){
+    this.getDocid()
+    this.checkforprofilepicture();
+   this.getEmail()
      this.checklsforchilddata()
      this.getparamid();
      this.getTrainersChildren();

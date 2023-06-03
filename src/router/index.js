@@ -65,6 +65,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/TrainerDashboard.vue')
   },
   {
+    path:'/TraineeChilddetail/:id',
+    name:'TraineeChildDetail',
+    component: () => import(/* webpackChunkName: "about" */ '../views/TraineeChilddetail.vue')
+  },
+  {
+     path:'/recruiterdashboard/:id',
+     name:'RecruiterDashboard',
+     component: () => import(/* webpackChunkName: "about" */ '../views/RecruiterDashboard.vue')
+  },
+  {
+    path:'/AdminDashboard/:id',
+    name:'AdminDashboard',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/AdminDashboard.vue')
+  },
+  {
     path:'/trainer',
     name:'train',
     component:Trainer

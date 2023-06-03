@@ -93,13 +93,13 @@ export default {
            credential:"Trainer"
          })
         //for admin should run in background at timeout i think
-        const adminRef = doc(db, "Admin", "C7Jng64ORvLGgCZvRYhy");
-     await updateDoc(adminRef, {
-      Trainers: arrayUnion({id:this.id,name:this.name,email:this.email,children:[],Trainer:true,role:"user",credential:"Trainer"})
-     });
+    //     const adminRef = doc(db, "Admin", "C7Jng64ORvLGgCZvRYhy");
+    //  await updateDoc(adminRef, {
+    //   Trainers: arrayUnion({id:this.id,name:this.name,email:this.email,children:[],Trainer:true,role:"user",credential:"Trainer"})
+    //  });
      const userRef = doc(db,"Users","Users");
      await updateDoc(userRef,{
-      Users:arrayUnion({ id:uuidv4(),name:this.name,email:this.email,children:[],Trainer:true,role:"User",credential:"Trainer"})
+      Users:arrayUnion({ id:this.id,name:this.name,email:this.email,children:[],Trainer:true,role:"User",credential:"Trainer"})
      })
      //log the person in there push the data
      this.loginwithemailpassword(this.email,this.password)

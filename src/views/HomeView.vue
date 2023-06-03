@@ -26,6 +26,12 @@
       <img src="../assets/hero.jpg" style="width:100%; object-fit: cover;">
       <div class="text">A good education is a foundation for a better future <br> <h3 class="author">Elizabeth Warent</h3>
         <b-button variant="outline-primary">Support</b-button>
+         <router-link :to="{path:`/trainerdashboard/${this.id}`}">
+          <b-button variant="outline-primary" v-if="loggedin">Dashboard</b-button>
+         </router-link>
+         <router-link :to="{path:`/recruiterdashboard/${this.id}`}">
+          <b-button variant="outline-primary" v-if="loggedRecruit">Dashboard</b-button>
+         </router-link>
       </div> 
     </div>
  <b-container class="AboutUs">
@@ -140,23 +146,26 @@ export default {
    return{
     Username:'',
     name:'',
-    children:[]
+    children:[],
+    role:'',
+    name:'',
+    loggedin:false,
+    loggedRecruit:false,
+    id:''
    }
   },
  methods:{
    getEmail(){
       let user = localStorage.getItem('signinToken')
       let userEmail = jwtDecode(user);
-      this.Username = userEmail.email
-
-      //console.log(this.Username)
+      this.Username = userEmail.email 
    },
   async Welome(){
     const querySnapshot = await getDocs(collection(db, "Trainer"));
     querySnapshot.forEach((doc)=>{
-     // console.log(doc.data().email);
       if(doc.data().email === this.Username){
-        this.name = doc.data().name
+      //  this.name = doc.data().name
+     
       }
     })
     this.getEmail();
@@ -170,17 +179,16 @@ export default {
    async getAllChildren(){
       const querySnapshot = await getDocs(collection(db,"Children"));
       querySnapshot.forEach((doc)=>{
-         //console.log(doc.data().children)
          this.children = doc.data().children
       })
-      console.log(this.children)
+    
    },
    async checkUserdatainLS(){
        let Admin = false;
       let userData = localStorage.getItem("Userdata")
       if(userData){
         userData = JSON.parse(userData)/// carry out the check here and return data
-        //console.log(typeof(userData.credential))
+  
          let signinToken = localStorage.getItem("signinToken")
          let email = jwtDecode(signinToken).email
          let coll = userData.credential
@@ -189,18 +197,16 @@ export default {
          querySnapshot.forEach((doc)=>{
             userdata.push(doc.data())
          })
-         console.log(email)
          for(let user of userdata){
             if(user.email===email){
-              console.log(user.Children)//something should be done with this data
-              //localStorage.setItem("children",JSON.stringify(user.children))
+             this.children = user.Children
             }
          }
          //get prviledge here and clear the userdata
         let role =  userData.role
-         console.log(role)
+         this.role = role;
          if(role === "User"){
-           console.log('The role of the user is user');
+          
          }else{
           //call escalate user priviledges probably with a function 
           //
@@ -232,15 +238,58 @@ export default {
                role:u.role,
                credential:u.credential
              }
-             console.log(userdata)
+           
            localStorage.setItem("Userdata",JSON.stringify(userdata))
           }
         }
     }
    
  },
+ async getName(){
+    //get email  
+     let signinToken = localStorage.getItem("signinToken")
+     let email = jwtDecode(signinToken).email
+    
+    const querysnapshot = await getDocs(collection(db,"Trainer"))
+    querysnapshot.forEach((doc)=>{
+        if(doc.data().email ===email){
+             this.name  = doc.data().name
+        }
+    })
+    return this.name
+ },
+ async loggedinasTrainer(){
+     let siginToken = localStorage.getItem("signinToken")
+     let email = jwtDecode(siginToken).email
+    const querysnapshot = await getDocs(collection(db,"Trainer"))
+     querysnapshot.forEach((doc)=>{
+          if(doc.data().email === email){
+               this.loggedin = true
+               this.id = doc.data().id
+          }
+     })
+ },
+ async loggedinasRecruit(){
+  let siginToken = localStorage.getItem("signinToken")
+     let email = jwtDecode(siginToken).email
+    const querySnapshot = await getDocs(collection(db,"Recruits"))
+    querySnapshot.forEach((doc)=>{
+          console.log(doc.data().Verified)
+          
+          for(let item of doc.data().Verified){
+                if(email === item.email){
+                     this.id = item.id
+                     this.loggedRecruit = true
+                }
+          }
+          
+    })
+ }
  },
  created(){
+  this.loggedinasRecruit()
+   this.loggedinasTrainer()
+  this.getName()
   this.PushUserDatatoLS();
   //this.getEmail();
   this.checkUserdatainLS();
@@ -433,3 +482,8 @@ a:hover {
 
 
 ///in the created check the userdata and get the userdata the collection is the credential and 
+
+
+
+//when you want to go trainerdashboard there should be a function that apppends the 
+unique id to the url

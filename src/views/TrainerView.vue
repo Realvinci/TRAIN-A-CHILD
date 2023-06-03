@@ -96,14 +96,14 @@ export default {
        })
         this.TrainerId = docRef.id
        console.log("Document written with ID: ",this.TrainerId);
-       const AdminDocRef = doc(db, "Admin","C7Jng64ORvLGgCZvRYhy");
-      //  const TrainRef = doc(db,"Trainer",this.TrainerId)
-      //  await updateDoc(TrainRef,{
-      //   Trainers: arrayUnion({id:this.uniqueid,name:this.name,email:this.email,phone:this.phone,country:this.country,children:[]})
-      //  })
-       await updateDoc(AdminDocRef, {
-        Trainers: arrayUnion({id:uuidv4(),name:this.name,email:this.email,children:[],Trainer:true,role:"user",credential:"Trainer"})
-      });///call a function to add the child if it exists to the new array
+      //  const AdminDocRef = doc(db, "Admin","C7Jng64ORvLGgCZvRYhy");
+      // //  const TrainRef = doc(db,"Trainer",this.TrainerId)
+      // //  await updateDoc(TrainRef,{
+      // //   Trainers: arrayUnion({id:this.uniqueid,name:this.name,email:this.email,phone:this.phone,country:this.country,children:[]})
+      // //  })
+      //  await updateDoc(AdminDocRef, {
+      //   Trainers: arrayUnion({id:uuidv4(),name:this.name,email:this.email,children:[],Trainer:true,role:"user",credential:"Trainer"})
+      // });
       const TrainerRef = doc(db,"Trainer",this.TrainerId)
       await updateDoc(TrainerRef,{
         children:arrayUnion(this.child)
