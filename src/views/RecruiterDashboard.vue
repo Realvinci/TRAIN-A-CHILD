@@ -1,5 +1,6 @@
 <template>
     <div class="Recruiter">
+      
          <img src="../assets/default1.png" alt="" width="200px;">
           <h3 style="padding-top:10px;">Welcome</h3>
           {{ Recruiterdetail.name}}.
@@ -30,14 +31,23 @@
              <button class="btn btn-primary" @click="uploadIdentification">Upload</button>
             </div>
           </form>
-  </div>
+            </div>
            </div>
            <div v-else>
-               ///do another v-else for children if there exist if there do make array for them under
-               //if there dont exist yet just put up no children! 
-               //underwhich you can put upload button on press  a modal pops asking for the necessary detail of child
-
+                <h5>Verified.</h5>
+                <div v-if="children">
+                <div  v-for="(child,i) in children" :key="i">
+                    {{  }}  
+                </div>
+                </div>
+                <div v-else>
+                    <h3>No Children Recruited yet</h3>
+                </div>
+                <router to="">
+                    <button>Upload</button>
+                </router>
            </div>
+
     </div>
 </template>
 
@@ -228,14 +238,15 @@ export default {
      async getChildren(){
           const querySnapshot = await getDocs(collection(db,"Recruits"))
           querySnapshot.forEach((doc)=>{
-                for(let item of doc.data().Verified){
+              for(let item of doc.data().Verified){
                    if(item.email === this.email){
-                       if(item.child.verified){
-                         this.children.push(item)
-                       }
+                      for(let child of item.Children){
+                          this.children.push(child)
+                      }
                    }
-                }
+              }
           })
+          console.log(this.children)
      },
      async checkforCompleteregistration(){
         const querySnapshot = await getDocs(collection(db,"Recruits"))
@@ -315,11 +326,19 @@ export default {
             }
         })
      },
-     uploadChild(){
-
-     }
+    async checkVerified(){
+      const querySnapshot = await getDocs(collection(db,"Recruits"))
+      querySnapshot.forEach((doc)=>{
+          for(let recruit of doc.data().Verified){
+              if(recruit.email === this.email){
+                  this.notcomplete = false
+              }
+          }
+      })
+    }
   },
   created(){
+    this.checkVerified()
      //this.saveToguarantor();
      this.checkforCompleteregistration()
      this.childuploadcheck()

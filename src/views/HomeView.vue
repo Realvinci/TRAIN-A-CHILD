@@ -12,7 +12,7 @@
           <b-nav-item text-variant="white">Home</b-nav-item>
         </router>
           <b-nav-item text-variant="white" >AboutUs</b-nav-item>
-        <router to="/recruiter">
+        <router :to="{path:'/recruiter'}">
           <b-nav-item text-variant="white">Become a Recruit</b-nav-item>
         </router>
         <router>

@@ -15,6 +15,8 @@
       </form>
       <button @click="signup">SignUp as Trainer <i class="fa-solid fa-heart"></i></button>
        <button @click="support">Support</button>
+       <p>Already a trainer?</p>
+       <router-link to="/login">login</router-link>
       <div class="recruiter">
         <router-link to="/recruiter">
            <button>Become Recruiter<i class="fa-solid fa-shield-halved"></i></button>

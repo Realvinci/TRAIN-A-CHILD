@@ -25,7 +25,8 @@ export default {
     return{
         email:'',
         password:'',
-        signinToken:''
+        signinToken:'',
+        id:''
     }
   },
   methods:{
@@ -40,8 +41,14 @@ export default {
     console.log(typeof(this.signinToken))
     this.saveTolocalstorage()
     // ...
-    this.clearfield();
-    this.gohome();
+    this.checkuserID(this.email);
+    
+    //this.clearfield();
+   
+    //take the person to his trainer dash board instead of taking him home
+   
+  
+  //  this.gohome();
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -98,7 +105,8 @@ export default {
         localStorage.setItem("signinToken",this.signinToken)
         this.clearfield();
         //get the user data and privileges
-        this.gohome()
+         this.checkuserID()
+        //this.gohome()
       }).catch((error)=>{
          console.log(error)
       })
@@ -129,6 +137,30 @@ export default {
       }
      
    },
+   //check the userid
+  async checkuserID(email){
+   
+    let users = []
+     const querySnapshot = await getDocs(collection(db,"Users"))
+     querySnapshot.forEach((doc)=>{
+         users.push(doc.data().Users)
+     })
+     for(let user of users){
+        for(let u of user){
+           if(u.email === email){
+             console.log('this is the detail', u)
+             this.id = u.id
+             this.goToTrainerDashboard(u.id)
+           }
+        }
+     }
+  },
+     goToTrainerDashboard(id){
+      this.$router.push(`/trainerdashboard/${id}`)
+   },
+   goToRecruiterDasboard(id){
+     this.$router.push(`/recruiterdash/${id}`)
+   }
   },
   created(){
  
@@ -139,7 +171,7 @@ export default {
 <style>
 
 </style>
-
+// on login check for the user id and push to the id
 ///check  for the localstorage if the user is recruite check for admin or not if is admin
 push the function
 

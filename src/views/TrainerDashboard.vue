@@ -18,9 +18,10 @@
             </div>
           </form>
            <div class="children">
-                  <div v-for="(child,i) in Trainerdetail.children" :key="i">
+                  <div v-for="(child,i) in children" :key="i">
                           <router-link :to="`/TraineeChildDetail/${child.id}`">
                             <img :src="child.image" alt="" width="100px">
+                            <h3>{{ child.name }}</h3>
                           </router-link>
                   </div>
            </div>
@@ -49,7 +50,9 @@ export default {
       display:null,
       id:'',
       profilepicture:false,
-      profilepictureUrl:''
+      profilepictureUrl:'',
+      newchildDetail:{},
+      children:[]
     }
   },
   methods:{
@@ -67,7 +70,8 @@ export default {
                   id:doc.data().id,
                   email:doc.data().email,
                   children:doc.data().Children
-               }
+               },
+               this.children = doc.data().Children
            }
        })
       
@@ -247,13 +251,44 @@ async checklsforchilddata(){
         }
     })
     
- }
+ },
+ //check the localstorage and get the child id from there and check the database and get the child with that id and update the children 
+  async checkforchildupdate(){
+     let id = localStorage.getItem('childId')
+     let docid = localStorage.getItem('docid')
+     const Traineref = doc(db, "Trainer", docid);
+     if(id){
+      const querySnapshot = await getDocs(collection(db,"Children"))
+     querySnapshot.forEach((doc)=>{
+        for(let child of doc.data().children){
+            if(id === child.id){
+                //basically get the child detail 
+
+                 Object.assign(this.newchildDetail,child)
+                localStorage.removeItem('childId')
+                 
+                 let find = this.children.find(child=>child.id === this.newchildDetail.id)
+                 if(!find){
+                      //push it into the  this.child  and update the online record with the this.newchild
+                      this.children.push(this.newchildDetail)
+                       updateDoc(Traineref,{
+                        Children:arrayUnion(this.newchildDetail)
+                       })
+                       alert('A new Child has Being Added');
+                 }
+            }
+        }
+     })
+     }
+     
+  }
   },
   beforeMount(){
     this.PushUserDatatoLS();
    
   },
   created(){
+    this.checkforchildupdate()
     this.getDocid()
     this.checkforprofilepicture();
    this.getEmail()

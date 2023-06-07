@@ -165,3 +165,10 @@ support button will be on the screen
 
 on login it pushes token to local storage
 //do the signout button in such a way that you clear the localStorage of everything on signout
+
+
+on the take to signup page put a login key 
+on the login key 
+on login page key the credential in the localStorage
+to and do a search for the child in the children database if it does exist 
+delete if it doesnt add and delete
