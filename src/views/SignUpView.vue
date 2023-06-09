@@ -101,7 +101,7 @@ export default {
     //  });
      const userRef = doc(db,"Users","Users");
      await updateDoc(userRef,{
-      Users:arrayUnion({ id:this.id,name:this.name,email:this.email,children:[],Trainer:true,role:"User",credential:"Trainer"})
+      Users:arrayUnion({ id:this.id,name:this.name,email:this.email,children:[],Trainer:true,role:"User",credential:"Trainer",image:'Default'})
      })
      //log the person in there push the data
      this.loginwithemailpassword(this.email,this.password)

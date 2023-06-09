@@ -131,7 +131,7 @@ registerAsRecruiter(){
       
       const userRef = doc(db,"Users","Users");
        await updateDoc(userRef,{
-      Users:arrayUnion({ id:this.RecruiterId,name:this.name,email:this.email,children:[],Trainer:false,role:"User",credential:"Recruit"})
+      Users:arrayUnion({ id:this.RecruiterId,name:this.name,email:this.email,children:[],Trainer:false,role:"User",credential:"Recruit",image:'Default'})
      })
        this.loginwithemailpassword(this.email,this.password)
        if(this.Recruiterdashboard){

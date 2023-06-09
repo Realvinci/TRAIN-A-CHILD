@@ -1,19 +1,25 @@
 <template>
    <div class="admin">
       <ul>
-        <router-link to="/adminTrainer">
+        <router-link :to="`/profile/${id}`">
+          <li>Profile</li>
+        </router-link>
+        <router-link to="/adminTrainers">
            <li>Trainers</li>
         </router-link>
         <router-link to="/adminChildren">
            <li>Children</li>
         </router-link>
-        <router-link to="/adminFundedKids">
+        <router-link to="/adminRecruits">
+            <li>Recruits</li>
+        </router-link>
+        <!-- <router-link to="/adminFundedKids">
            <li>FundedKids</li>
-        </router-link>
-        <router-link to="/adminUnFundedKids">
+        </router-link> -->
+        <!-- <router-link to="/adminUnFundedKids">
            <li>UnFundedKids</li>
-        </router-link>
-        <router-link to="/adminVerifiedRecruits">
+        </router-link> -->
+        <!-- <router-link to="/adminVerifiedRecruits">
            <li>VerifiedRecruits</li>
         </router-link>
         <router-link to="/adminUnverifiedRecruits">
@@ -27,7 +33,7 @@
         </router-link>
         <router-link to="/adminRecruiterChildren">
            <li>RecruiterChildren</li>
-        </router-link>
+        </router-link> -->
       </ul>
    </div>
 </template>
@@ -35,6 +41,7 @@
 <script>
 import {app as app} from '../../firebase'
 import { collection, getDocs, getFirestore } from 'firebase/firestore'
+import jwtDecode from 'jwt-decode'
 const db = getFirestore(app)
 export default {
    name:'AdminDashboard',
@@ -48,7 +55,9 @@ export default {
         Trainers:[],
         CompletedReg:[],
         Uncompleted:[],
-        Recruiterchildren:[]
+        Recruiterchildren:[],
+        email:'',
+        id:''
        }
 
    },
@@ -132,12 +141,30 @@ export default {
              }
           }
        })
+     },
+     getEmail(){
+         let signinToken = localStorage.getItem('signinToken')
+         this.email = jwtDecode(signinToken).email
+         console.log(this.email)
+     },
+     async getId(){
+        const querySnapshot = await getDocs(collection(db,"Users"))
+         querySnapshot.forEach((doc)=>{
+              for(let user of doc.data().Users){
+                  if(this.email === user.email){
+                      this.id = user.id
+                  }
+              }
+         })
+        
      }
 
    },
    created(){
+      this.getEmail()
+      this.getId()
     //this.getFunded()
-    this.getUnFunded()
+    //this.getUnFunded()
      // this.uncompleted()
    // this.getUnverified()
      // this.getAllTrainers()

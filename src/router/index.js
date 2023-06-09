@@ -117,8 +117,8 @@ const routes = [
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminRecruiterChildren.vue')
   },
   {
-    path:'/adminTrainer',
-    name:'AdminTrainer',
+    path:'/adminTrainers',
+    name:'AdminTrainers',
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminTrainer.vue')
   },
   {
@@ -137,9 +137,34 @@ const routes = [
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminVerifiedRecruits.vue')
   },
   {
+    path:'/adminRecruits',
+    name:'AdminverifiedRecruits',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminRecruits.vue')
+  },
+  {
     path:'/recruitchildupload/:id',
     name:'recruiterchildupload',
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/RecruiterChildUpload.vue')
+  },
+  {
+    path:'/profile/:id',
+    name:'Profile',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Profile.vue')
+  },
+  {
+    path:'/adminChildDetail/:id',
+    name:'AdminChildDetail',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminChildDetailPage.vue')
+  },
+  {
+    path:'/adminRecruitChildDetail/:id',
+    name:'AdminRecruitChildDetail',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminRecruitChildDetail.vue')
+  },
+  {
+    path:'/recruiter/:id',
+    name:'RecruiterDetail',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/RecruiterDetail.vue')
   },
   {
     path:'/trainer',

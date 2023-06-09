@@ -109,7 +109,7 @@ data(){
     this.childId = uuidv4();
     console.log('uploading child details')
     await updateDoc(doc(db, "Children","yAdO4UC7V9CvLRx0tsbr"), {
-        RecruiterChildren:arrayUnion({name:this.name,age:this.age,proposedcareer:this.proposedcareer,detail:this.detail,gender:this.gender,image:this.imageurl,id:this.childId,RecruiterId:this.id})
+        RecruiterChildren:arrayUnion({name:this.name,age:this.age,proposedcareer:this.proposedcareer,detail:this.detail,gender:this.gender,image:this.imageurl,id:this.childId,RecruiterId:this.id,Approved:false,Funded:false})
       });
     //   const AdminDocRef = doc(db, "Admin","C7Jng64ORvLGgCZvRYhy");
     //    await updateDoc(AdminDocRef, {
