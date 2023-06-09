@@ -1,45 +1,35 @@
 <template>
-  <div class="admin">
-    <div class="Trainers">
-      <h1>Trainers</h1>
-      <section class="intro">
-  <div class="bg-image h-100" style="background-color: #f5f7fa;">
-    <div class="mask d-flex align-items-center h-100">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body p-0">
-                <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true" style="position: relative; height: 700px">
-                  <table class="table table-striped mb-0">
-                    <thead style="background-color: #002d72;">
-                      <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">NAME</th>
-                        <th scope="col">CONTACT</th>
-                        <th scope="col">NO. OF CHILDREN</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(i,trainer) in Trainers" :key="i">
-                        <td>{{ i }}</td>
-                        <td>{{ trainer.name }}</td>
-                        <td>{{ trainer.email }}</td>
-                        <td>{{  }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-    </div>
-  </div>
+   <div class="admin">
+      <ul>
+        <router-link to="/adminTrainer">
+           <li>Trainers</li>
+        </router-link>
+        <router-link to="/adminChildren">
+           <li>Children</li>
+        </router-link>
+        <router-link to="/adminFundedKids">
+           <li>FundedKids</li>
+        </router-link>
+        <router-link to="/adminUnFundedKids">
+           <li>UnFundedKids</li>
+        </router-link>
+        <router-link to="/adminVerifiedRecruits">
+           <li>VerifiedRecruits</li>
+        </router-link>
+        <router-link to="/adminUnverifiedRecruits">
+           <li>UnverifiedRecruits</li>
+        </router-link>
+        <router-link to="/adminUncompletedReg">
+           <li>UnCompletedReg</li>
+        </router-link>
+        <router-link to="/adminCompletedReg">
+           <li>CompletedReg</li>
+        </router-link>
+        <router-link to="/adminRecruiterChildren">
+           <li>RecruiterChildren</li>
+        </router-link>
+      </ul>
+   </div>
 </template>
 
 <script>
@@ -50,10 +40,15 @@ export default {
    name:'AdminDashboard',
    data(){
        return{
-        Trainers:[],
-        Children:[],
+        FundedKids:[],
+        UnfundedKids:[],
         VerifiedRecruits:[],
-        UnverifiedRecruits:[]
+        UnverifiedRecruits:[],
+        Children:[],
+        Trainers:[],
+        CompletedReg:[],
+        Uncompleted:[],
+        Recruiterchildren:[]
        }
 
    },
@@ -62,34 +57,93 @@ export default {
       //get the trainer details in an array with th children there are training and return as an arrau
         const querySnapshot = await getDocs(collection(db,"Trainer"))
         querySnapshot.forEach((doc)=>{
+              console.log('this are the Trainers',doc.data())
              this.Trainers = doc.data()
         })
     },
     async getChildren(){
         const querySnapshot = await getDocs(collection(db,"Children"))
         querySnapshot.forEach((doc)=>{
-            this.Children =doc.data()
+            for(let child of doc.data().children){
+              this.Children.push('This is part of the child',child)
+            }
+           for(let child of doc.data().RecruiterChildren){
+                console.log('This is part of Recruiter children',child)
+                this.Recruiterchildren.push(child)
+           }
         })
     },
      async getVerifiedRecruits(){
         const querySnapshot = await getDocs(collection(db,"Recruits"))
          querySnapshot.forEach((doc)=>{
-
-               this.VerifiedRecruits=doc.data().Verified
+             for(let recruit of doc.data().Verified){
+                   this.VerifiedRecruits.push(recruit)
+             }
          })
      },
      async getUnverified(){
        const querySnapshot = await getDocs(collection(db,"Recruits"))
        querySnapshot.forEach((doc)=>{
-            this.UnverifiedRecruits=doc.data().unverified
+             for(let unverified of doc.data().unverified){
+                  this.UnverifiedRecruits.push(unverified)
+                   console.log(unverified)
+             }
        })
-
+     },
+     async uncompleted(){
+        const querySnapshot = await getDocs(collection(db,"Recruits"))
+        querySnapshot.forEach((doc)=>{
+             for(let recruit of doc.data().unverified){
+                 if(recruit.Nin===''|| recruit.guarantorform === ''){
+                     this.Uncompleted.push(recruit)
+                 }
+             }
+        })
+        console.log('This are the uncompleted',this.Uncompleted)
+     },
+     async completed(){
+        const querySnapshot = await getDocs(collection(db,"Recruits"))
+        querySnapshot.forEach((doc)=>{
+              for(let recruit of doc.data().unverified){
+                   if(recruit.Nin !='' || recruit.guarantorform !=''){
+                        this.CompletedReg.push(recruit)
+                   }
+              }
+        })
+     },
+     async getFunded(){
+        const querySnapshot = await getDocs(collection(db,"Children"))
+        querySnapshot.forEach((doc)=>{
+               for(let item of doc.data().children){
+                   if(item.Funded){
+                      console.log(item)
+                      this.FundedKids.push(item)
+                   }
+               }
+        })
+     },
+     async getUnFunded(){
+       const querySnapshot = await getDocs(collection(db,"Children"))
+       querySnapshot.forEach((doc)=>{
+          for(let item of doc.data().children){
+             if(!item.Funded){
+               
+                console.log(item)
+             }
+          }
+       })
      }
+
    },
    created(){
-      this.getUnverified()
-      this.getAllTrainers()
-      this.getVerifiedRecruits()
+    //this.getFunded()
+    this.getUnFunded()
+     // this.uncompleted()
+   // this.getUnverified()
+     // this.getAllTrainers()
+     // this.getVerifiedRecruits()
+      
+      //this.getChildren()
    }
 }
 </script>

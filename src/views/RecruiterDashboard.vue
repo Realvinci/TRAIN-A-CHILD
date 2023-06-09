@@ -36,16 +36,21 @@
            <div v-else>
                 <h5>Verified.</h5>
                 <div v-if="children">
+                  <h1>Children</h1>
                 <div  v-for="(child,i) in children" :key="i">
-                    {{  }}  
+                  <router-link :to="`/recruiterchildedit/${child.id}`">
+                    <img :src="child.image" style="width:100px;">
+                  </router-link>
+                   <h6>{{ child.name }}</h6>
+                   <h6>{{ child.proposedcareer }}</h6>
                 </div>
                 </div>
                 <div v-else>
                     <h3>No Children Recruited yet</h3>
                 </div>
-                <router to="">
-                    <button>Upload</button>
-                </router>
+               
+                    <button @click="uploadChild">Upload</button>
+                
            </div>
 
     </div>
@@ -73,7 +78,8 @@ export default {
      notcomplete:true,
      identification:{},
      guarantor:{},
-     children:[]
+     children:[],
+     id:this.$route.params.id
     }
   },
   methods:{
@@ -236,17 +242,15 @@ export default {
          
      },
      async getChildren(){
-          const querySnapshot = await getDocs(collection(db,"Recruits"))
+          const querySnapshot = await getDocs(collection(db,"Children"))
           querySnapshot.forEach((doc)=>{
-              for(let item of doc.data().Verified){
-                   if(item.email === this.email){
-                      for(let child of item.Children){
-                          this.children.push(child)
-                      }
-                   }
-              }
+             for(let item of doc.data().RecruiterChildren){
+                 if(item.RecruiterId === this.id){
+                    
+                    this.children.push(item)
+                 }
+             }
           })
-          console.log(this.children)
      },
      async checkforCompleteregistration(){
         const querySnapshot = await getDocs(collection(db,"Recruits"))
@@ -335,9 +339,14 @@ export default {
               }
           }
       })
+    },
+    uploadChild(){
+      //recruiterchildupload/${this.id}
+       this.$router.push(`/recruitchildupload/${this.id}`)
     }
   },
   created(){
+    console.log(this.id)
     this.checkVerified()
      //this.saveToguarantor();
      this.checkforCompleteregistration()

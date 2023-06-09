@@ -10,6 +10,8 @@ import TrainerDashboard from '../views/TrainerDashboard'
 import NotFound from '../views/NotFound'
 import UploadChildren from '../views/uploadchildren'
 import UploadCredentials from '../views/uploadCredential'
+
+
 Vue.use(VueRouter)
 
 function useidandenter(){
@@ -75,9 +77,69 @@ const routes = [
      component: () => import(/* webpackChunkName: "about" */ '../views/RecruiterDashboard.vue')
   },
   {
+    path:'/recruiterchildedit/:id',
+    name:'RecruiterChildEdit',
+    component: () => import(/* webpackChunkName: "about" */ '../views/RecruiterchildEdit.vue')
+  },
+  {
     path:'/AdminDashboard/:id',
     name:'AdminDashboard',
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/AdminDashboard.vue')
+  },
+  {
+    path:'/adminTrainerinfo/:id',
+    name:'AdminTrainerinfo',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/adminTrainerinfo.vue')
+  },
+  {
+    path:'/adminChildren',
+    name:'AdminChildren',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminChildren.vue')
+  },
+  {
+    path:'/adminCompletedReg',
+    name:'AdminCompletedReg',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminCompletedReg.vue')
+  },
+  {
+    path:'/adminFundedKids',
+    name:'AdminFundedKids',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminFundedKids.vue')
+  },
+  {
+    path:'/adminUnFundedKids',
+    name:'AdminUnFundedKids',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminUnFundedKids.vue')
+  },
+  {
+    path:'/adminRecruiterChildren',
+    name:'AdminRecruiterChildren',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminRecruiterChildren.vue')
+  },
+  {
+    path:'/adminTrainer',
+    name:'AdminTrainer',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminTrainer.vue')
+  },
+  {
+    path:'/adminUncompletedReg',
+    name:'AdminUncompletedReg',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminUncompletedReg.vue')
+  },
+  {
+    path:'/adminUnverifiedRecruits',
+    name:'AdminUnverifiedRecruits',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminUnverifiedRecruits.vue')
+  },
+  {
+    path:'/adminVerifiedRecruits',
+    name:'AdminverifiedRecruits',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminVerifiedRecruits.vue')
+  },
+  {
+    path:'/recruitchildupload/:id',
+    name:'recruiterchildupload',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/RecruiterChildUpload.vue')
   },
   {
     path:'/trainer',
@@ -104,7 +166,8 @@ const routes = [
     name:'trainerdashboard',
    // beforeEnter:useidandenter(),
     component:TrainerDashboard
-  }
+  },
+
 ]
 
 const router = new VueRouter({
