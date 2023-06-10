@@ -8,10 +8,20 @@
                           <div class="white-box text-center"><img :src="RecruitInfo[0].image" width="200px;" class="img-responsive"></div> 
                       </div>
                       <div class="col-lg-7 col-md-7 col-sm-6">
-                          
-                          
+                          <h1>Recruited Children.</h1>
+                          <ul>
+                            <li v-for="(child,i) in RecruitInfo[0].children" :key="i">
+                               <img :src="child.image" alt="">
+                               Name: <p>{{ child.name }}</p>
+                               Age: <p>{{ child.age }}</p>
+                               Gender: <p>{{ child.gender }}</p>
+                               Detail: <p>{{ child.detail }}</p>
+                               Approved: <p>{{ child.Approved }}</p>
+                            </li>
+                          </ul>
                          
                           <button @click="deleteRecruiter" class="btn btn-danger">Delete</button>
+                          <button class="btn btn-primary" @click="goBack">Back</button>
                           <!-- <h2 class="mt-5">
                             Funded: {{ childInfo[0].Funded }}
                           </h2>
@@ -55,6 +65,9 @@ export default {
       },
       async deleteRecruiter(){
 
+      },
+      goBack(){
+         this.$router.go(-1)
       }
    },
    created(){

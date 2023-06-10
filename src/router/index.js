@@ -167,6 +167,11 @@ const routes = [
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/RecruiterDetail.vue')
   },
   {
+    path:'/unverifiedrecruiter/:id',
+    name:'RecruiterDetail',
+    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/UnverifiedRecruit.vue')
+  },
+  {
     path:'/trainer',
     name:'train',
     component:Trainer

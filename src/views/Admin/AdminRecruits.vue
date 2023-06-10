@@ -33,7 +33,7 @@
     <tbody>
       <tr v-for="(recruit,i ) in UnVerifiedRecruits" :key="i">
           <td>
-            <router-link :to="`/recruiter/${recruit.id}`">
+            <router-link :to="`/unverifiedrecruiter/${recruit.id}`">
               {{ recruit.name }}    
             </router-link>     
           </td>
