@@ -84,21 +84,11 @@ export default {
       },
       async addToTrainers(name,email,children){
         this.id = uuidv4()
-        /// for the users end run this function
-         await setDoc(doc(db,"Trainer",this.name),{
-           id:this.id,
-           name:this.name,
-           email:this.email,
-           childen:[],
-           Trainer:true,
-           role:"user",
-           credential:"Trainer"
-         })
-        //for admin should run in background at timeout i think
-    //     const adminRef = doc(db, "Admin", "C7Jng64ORvLGgCZvRYhy");
-    //  await updateDoc(adminRef, {
-    //   Trainers: arrayUnion({id:this.id,name:this.name,email:this.email,children:[],Trainer:true,role:"user",credential:"Trainer"})
-    //  });
+        const TrainerRef = doc(db,"Trainers","Trainers")
+        await updateDoc(TrainerRef,{
+          Trainers:arrayUnion({id:this.id,name:this.name,email:this.email,Children:[],Trainer:true,role:"user",credential:"Trainer",image:'Default'})
+        })
+  
      const userRef = doc(db,"Users","Users");
      await updateDoc(userRef,{
       Users:arrayUnion({ id:this.id,name:this.name,email:this.email,children:[],Trainer:true,role:"User",credential:"Trainer",image:'Default'})

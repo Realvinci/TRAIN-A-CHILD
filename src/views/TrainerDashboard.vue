@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
      <div v-if="!profilepicture">
       <img src="../assets/trainerdefault.jpg" alt="" width="200px;">
      </div> 
@@ -29,6 +29,21 @@
             <button class="btn btn-primary">Home</button>
            </router-link>
          
+  </div> -->
+  <div class="trainerDashboard">
+    
+      <ul>
+        <router-link :to="`/profile/${ID}`">
+          <li>Profile</li>
+        </router-link>
+        <router-link to="/">
+          <li>Home</li>
+        </router-link>
+        <router-link to="/">
+          <li>Logout</li>
+        </router-link>
+       </ul>
+   
   </div>
 </template>
 
@@ -52,16 +67,14 @@ export default {
       profilepicture:false,
       profilepictureUrl:'',
       newchildDetail:{},
-      children:[]
+      children:[],
+      ID:this.$route.params.id
     }
   },
   methods:{
-    getdisplaypic(){
-      this.display = event.target.files[0];
-    },
      async getTrainersChildren(){
       let Trainers = [];
-       const querySnapshot = await getDocs(collection(db,"Trainer"))
+       const querySnapshot = await getDocs(collection(db,"Trainers"))
        querySnapshot.forEach((doc)=>{
            if(doc.data().email === this.email){
              //  console.log(doc.data())
@@ -74,12 +87,6 @@ export default {
                this.children = doc.data().Children
            }
        })
-      
-      
-     },
-     getparamid(){
-       this.uniqueid = this.$route.params.id
-        
      },
      async PushUserDatatoLS(){
   //return the credential and the role
@@ -112,151 +119,31 @@ export default {
    
  },
 async checklsforchilddata(){
-  //get add and delete it from the local storage
-  let childdata = localStorage.getItem('childdata')
-   childdata = JSON.parse(childdata)
-   if(childdata){
-      //add to the trainer section
-      //1.get the email ref 
-       let email = localStorage.getItem('signinToken')
-       email = jwtDecode(email).email
-       let ref;
-        const querySnapshot = await getDocs(collection(db,"Trainer"))
+    let trainerinfo ={}
+    let trainera = []
+    let childdata = localStorage.getItem('childdata')
+    childdata = JSON.parse(childdata)
+    if(!childdata){
+         const querySnapshot = await getDocs(collection(db,"Trainers"))
          querySnapshot.forEach((doc)=>{
-              if(doc.data().email === email){
-                ref = doc.id
-              }
+             for(let trainer of doc.data().Trainers){
+                 if(trainer.id === this.ID){
+                    console.log(trainer)
+                    trainera.push(trainer)
+                    Object.assign(trainerinfo,trainer)
+                 }
+             }
          })
-         const TrainerRef = doc(db,"Trainer",ref)
-      await updateDoc(TrainerRef,{
-        children:arrayUnion(childdata)
-       })
-       //clear the ls for the particular
-       localStorage.removeItem("childId");
-   }
-   localStorage.removeItem("childdata")
+         const TrainerRef = doc(db,"Trainers","Trainers")
+      
+    }
  },
- uploadDisplayPic(){
-     const metadata = {
-         contentType:'image/jpeg'
-     };
-     //Upload file and metadata to the object 'image/nameofimage.jpeg
-     const storageRef = ref(storage,'credential/'+ this.display.name)
-     const uploadTask = uploadBytesResumable(storageRef,this.display,metadata);
-     //Listen for state changes, errors, and completion of the upload
-     uploadTask.on('state_changed',
-     (snapshot)=>{
-       const progress = (snapshot.bytesTransferred/ snapshot.totalBytes) * 100;
-       console.log(`Upload is ${progress}% done`)
-       switch(snapshot.state){
-          case 'paused':
-            console.lg('Upload is paused');
-            break;
-          case 'running':
-            console.log("Upload is running");
-            break;    
-       }
-     },
-     (error)=>{
-      switch(error.code){
-         case 'storage/unauthorized':
-          //User doesnt have permission to access the object
-          break;
-         case 'storage/canceled':
-          //User cancelled the upload 
-          break;
-          case 'storage/unknown':
-            //Unknown error occured, inspect error.serverResponse
-            break;
-      }
-     },
-     ()=>{
-       getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl)=>{
-         this.dp =downloadUrl
-         console.log(`File avalable at`,downloadUrl)
-         this.savedp(downloadUrl)
-         window.location.reload()
-       })
-     }
-     )
- },
- async savedp(imageurl){
-    let signInToken = localStorage.getItem("signinToken")
-     let email = jwtDecode(signInToken).email
-     let item ={}
-   //get access to the user from the trainers
-    let docid = localStorage.getItem("docid")
-     const TrainerRef = doc(db, "Trainer",docid);
-     const querySnapshot = await getDocs(collection(db,"Trainer"))
-     querySnapshot.forEach((doc)=>{
-          if(doc.data().email == email){
-              console.log('The properties',doc.data())
-               item = {
-                 name:doc.data().name,
-                 Children:doc.data().Children,
-                 email:doc.data().email,
-                 credential:doc.data().credential,
-                 id:doc.data().id,
-                 role:doc.data().role,
-                 Trainer:doc.data().Trainer,
-                 
-              }
-             
-          }
-         
-     })
-    
-     console.log('this are items of the object item',item)
-     await setDoc(TrainerRef,{
-               Children:item.Children,
-               email:item.email,
-               credential:item.credential,
-               id:item.id,
-               role:item.role,
-               Trainer:item.Trainer,
-               dp:imageurl
-     })
- },
-  getEmail(){
-    let signinToken = localStorage.getItem("signinToken")
-    let email = jwtDecode(signinToken).email
-    this.email = email
- },
- async getDocid(){
-   let signinToken = localStorage.getItem("signinToken")
-   let email = jwtDecode(signinToken).email
-    const querySnapshot = await getDocs(collection(db,"Trainer"))
-       querySnapshot.forEach((doc)=>{
-           if(doc.data().email === email){
-              this.id = doc.id          
-              }
-       })
-     localStorage.setItem("docid",this.id)
- },
- async checkforprofilepicture(){
-   let signin = localStorage.getItem("signinToken")
-   let email = jwtDecode(signin).email
-   const querySnapshot = await getDocs(collection(db,"Trainer"))
-    querySnapshot.forEach((doc)=>{
-        if(doc.data().email === email){
-            //checkfor existence of propertie
-            if(doc.data().dp){
-               console.log('Picture exists');
-               this.profilepicture = true
-               this.profilepictureUrl = doc.data().dp
-               console.log(this.profilepicture)
-            }else{
-               console.log('Picture doesnt exists')
-            }
-        }
-    })
-    
- },
+
  //check the localstorage and get the child id from there and check the database and get the child with that id and update the children 
   async checkforchildupdate(){
      let id = localStorage.getItem('childId')
-     let docid = localStorage.getItem('docid')
-     const Traineref = doc(db, "Trainer", docid);
+     
+     const Traineref = doc(db, "Trainers","Trainers");
      if(id){
       const querySnapshot = await getDocs(collection(db,"Children"))
      querySnapshot.forEach((doc)=>{
@@ -281,20 +168,22 @@ async checklsforchilddata(){
      })
      }
      
-  }
+  },
+  
   },
   beforeMount(){
     this.PushUserDatatoLS();
    
   },
   created(){
-    this.checkforchildupdate()
-    this.getDocid()
-    this.checkforprofilepicture();
-   this.getEmail()
-     this.checklsforchilddata()
-     this.getparamid();
-     this.getTrainersChildren();
+     //this.getNumberofChildren()
+   // this.checkforchildupdate()
+  //   this.getDocid()
+  //   this.checkforprofilepicture();
+  //  this.getEmail()
+      this.checklsforchilddata()
+  //    this.getparamid();
+  //    this.getTrainersChildren();
      
   }
 }

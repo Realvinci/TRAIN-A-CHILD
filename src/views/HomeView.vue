@@ -1,51 +1,96 @@
 <template>
   <div class="home">
-  <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand href="#">TRACH</b-navbar-brand>
-
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-    <b-collapse id="nav-collapse" is-nav>
-      <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
-        <router to="/home">
-          <b-nav-item text-variant="white">Home</b-nav-item>
-        </router>
-          <b-nav-item text-variant="white" >AboutUs</b-nav-item>
-        <router :to="{path:'/recruiter'}">
-          <b-nav-item text-variant="white">Become a Recruit</b-nav-item>
-        </router>
-        <router>
-          <b-nav-item text-variant="white">Contact</b-nav-item>
-        </router>
-      </b-navbar-nav>
-    </b-collapse>
-  </b-navbar>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="#"><span class="text-primary">TRA</span>CH</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="#home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#about">About</a>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/recruitersignup">Become a Recruit</router-link>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#team">Team</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#contact">Contact</a>
+              </li>
+            </ul>
+           
+          </div>
+        </div>
+      </nav>
   <div>
     <div class="hero">
-      <img src="../assets/hero.jpg" style="width:100%; object-fit: cover;">
+      <img src="../assets/group.jpg" style="width:100%; object-fit: cover;">
       <div class="text">A good education is a foundation for a better future <br> <h3 class="author">Elizabeth Warent</h3>
         <b-button variant="outline-primary">Support</b-button>
          <router-link :to="{path:`/trainerdashboard/${this.id}`}">
           <b-button variant="outline-primary" v-if="loggedin">Dashboard</b-button>
          </router-link>
          <router-link :to="{path:`/recruiterdashboard/${this.id}`}">
-          <b-button variant="outline-primary" v-if="loggedRecruit">Dashboard</b-button>
+           <b-button variant="outline-primary" v-if="loggedRecruit">Dashboard</b-button>
          </router-link>
       </div> 
     </div>
- <b-container class="AboutUs">
-   <h1>About us.</h1>
-    <b-row>
-      <b-col class="col-md-6">
-        <img src="../assets/aboutuschild.jpg" width="200px">
-      </b-col>
-      <b-col class="col-md-6">
-        <h1>Train a Child</h1>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing tenetur omnis nisi ipsum animi molestiae reprehenderit adipisci vero accusantium nobis quibusdam ducimus voluptatem odit amet, architecto sed ipsa consequuntur nemo.</p>
-      </b-col>
-    </b-row>
- </b-container>
+  <!--About -->
+  <section id="about" class="about section-padding">
+       <div class="container">
+          <div class="row">
+             <div class="col-lg-4 col-md-12 col-12">
+                <div class="about-img">
+                    <img src="../assets/children-1.jpg" alt="" class="img-fluid">
+                </div>
+             </div>
+              <div class="col-lg-8 col-md-12 col-12 ps-lg-5 mt-md-5">
+                  <div class="about-text">
+                    <h2>TRAIN A CHILD IS AN INIATIVE <br> TO TAKE KIDS OF THE STREETS. </h2>
+                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quas sit adipisci necessitatibus quasi recusandae voluptas veritatis itaque, repudiandae blanditiis dolor, tempora dignissimos, deleniti velit nobis id quos! Totam, laboriosam inventore.</p>
+                    <a href="#" class="btn btn-warning">Learn More</a>
+                  </div>
+
+              </div>
+          </div>
+       </div>
+  </section>
+  <!--Children -->
+  <section id="children" class="children section-padding">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-12">
+                   <div class="section-header text-center pb-5">
+                         <h2>Children</h2>
+                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat nihil vero, accusantium esse voluptates alias libero rerum neque, nisi laboriosam odio officia non deleniti suscipit illum consectetur et quasi obcaecati?</p>
+                   </div>
+               </div>
+            </div>
+
+            <div class="row">
+                 <div class="col-12 col-md-12 col-lg-4" v-for="(child,i) in children" :key="i">
+                       <div class="card text-center bg-white pb-2">
+                            <div class="card-body text-dark">
+                                 <div class="img-area mb-47">
+                                     <img :src="child.image" alt="" class="img-fluid">
+                                 </div>
+                                 <h3 class="card-title">{{ child.name }}</h3>
+                                 <p class="lead">{{ child.detail }}</p>
+                                 <button class="btn bg-warning text-dark">View</button>
+                            </div>
+                       </div>
+                 </div>
+            </div>
+         </div>
+  </section>
+
+
  <!--children-->
     <b-container>
           <h1>Children.</h1>
@@ -261,7 +306,7 @@ export default {
  async loggedinasTrainer(){
      let siginToken = localStorage.getItem("signinToken")
      let email = jwtDecode(siginToken).email
-    const querysnapshot = await getDocs(collection(db,"Trainer"))
+    const querysnapshot = await getDocs(collection(db,"Trainers"))
      querysnapshot.forEach((doc)=>{
           if(doc.data().email === email){
                this.loggedin = true
@@ -287,14 +332,14 @@ export default {
  }
  },
  created(){
-  this.loggedinasRecruit()
+  //this.loggedinasRecruit()
    this.loggedinasTrainer()
-  this.getName()
-  this.PushUserDatatoLS();
+  //this.getName()
+  //this.PushUserDatatoLS();
   //this.getEmail();
-  this.checkUserdatainLS();
- this.Welome();
- this.getAllChildren();
+  //this.checkUserdatainLS();
+ //this.Welome();
+ //this.getAllChildren();
  }
 }
 </script>

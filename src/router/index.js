@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import SignUpView from '../views/SignUpView'
+import TrainerSignup from '../views/TrainerSignup'
 import login from '../components/login'
-import Recruite from '../views/RecruiterView'
+import RecruiterSignup from '../views/RecruiterSignup.vue'
 import Trainer from '../views/TrainerView'
 import Support from '../views/SupportView'
 import TrainerDashboard from '../views/TrainerDashboard'
@@ -33,18 +33,18 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path:'/signup',
-    name:'signup',
-    component:SignUpView
+    path:'/trainersignup',
+    name:'trainersignup',
+    component:TrainerSignup
   },{
     path:'/login',
     name:'login',
     component:login
   },
   {
-    path:'/recruiter',
-    name:'recruite',
-    component:Recruite
+    path:'/recruitersignup',
+    name:'recruitersignup',
+    component:RecruiterSignup
   },
   {
     path:'/uploadchild',
@@ -96,45 +96,11 @@ const routes = [
     name:'AdminChildren',
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminChildren.vue')
   },
-  {
-    path:'/adminCompletedReg',
-    name:'AdminCompletedReg',
-    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminCompletedReg.vue')
-  },
-  {
-    path:'/adminFundedKids',
-    name:'AdminFundedKids',
-    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminFundedKids.vue')
-  },
-  {
-    path:'/adminUnFundedKids',
-    name:'AdminUnFundedKids',
-    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminUnFundedKids.vue')
-  },
-  {
-    path:'/adminRecruiterChildren',
-    name:'AdminRecruiterChildren',
-    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminRecruiterChildren.vue')
-  },
+
   {
     path:'/adminTrainers',
     name:'AdminTrainers',
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminTrainer.vue')
-  },
-  {
-    path:'/adminUncompletedReg',
-    name:'AdminUncompletedReg',
-    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminUncompletedReg.vue')
-  },
-  {
-    path:'/adminUnverifiedRecruits',
-    name:'AdminUnverifiedRecruits',
-    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminUnverifiedRecruits.vue')
-  },
-  {
-    path:'/adminVerifiedRecruits',
-    name:'AdminverifiedRecruits',
-    component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/AdminVerifiedRecruits.vue')
   },
   {
     path:'/adminRecruits',
@@ -168,7 +134,7 @@ const routes = [
   },
   {
     path:'/unverifiedrecruiter/:id',
-    name:'RecruiterDetail',
+    name:'unverifiedrecruiter',
     component:()=>import(/*webpackChunkName:"AdminDashboard"*/'../views/Admin/UnverifiedRecruit.vue')
   },
   {

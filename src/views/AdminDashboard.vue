@@ -19,27 +19,6 @@
         <router-link to="">
             <li>Logout</li>
         </router-link>
-        <!-- <router-link to="/adminFundedKids">
-           <li>FundedKids</li>
-        </router-link> -->
-        <!-- <router-link to="/adminUnFundedKids">
-           <li>UnFundedKids</li>
-        </router-link> -->
-        <!-- <router-link to="/adminVerifiedRecruits">
-           <li>VerifiedRecruits</li>
-        </router-link>
-        <router-link to="/adminUnverifiedRecruits">
-           <li>UnverifiedRecruits</li>
-        </router-link>
-        <router-link to="/adminUncompletedReg">
-           <li>UnCompletedReg</li>
-        </router-link>
-        <router-link to="/adminCompletedReg">
-           <li>CompletedReg</li>
-        </router-link>
-        <router-link to="/adminRecruiterChildren">
-           <li>RecruiterChildren</li>
-        </router-link> -->
       </ul>
       <h3>No of Trainers: {{ NoOfTrainers }}</h3>
       <h3>No of Kids: {{ NoOfChildren }}</h3>
